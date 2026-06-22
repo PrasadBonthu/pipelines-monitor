@@ -17,8 +17,18 @@ export async function getPipelineOverview(
   const stats: PipelineOverview[] = [];
 
   if (renderMultipleProjects) {
-    for (const project of projects) {
-      stats.push(...(await getPipelinesPerProject(project, showAsPercentage)));
+    // FIX 1: Run all projects in parallel with Promise.allSettled so a single
+    // failing project does not abort the entire widget load.
+    const results = await Promise.allSettled(
+      projects.map((project) => getPipelinesPerProject(project, showAsPercentage))
+    );
+
+    for (const result of results) {
+      if (result.status === "fulfilled") {
+        stats.push(...result.value);
+      }
+      // Silently skip rejected projects so the widget still renders the rest.
+      // You can add console.warn(result.reason) here for debugging if needed.
     }
   } else {
     const project = await getCurrentProjectName();
@@ -34,6 +44,12 @@ async function getPipelinesPerProject(
   const pipelines = await getClient(PipelinesRestClient).listPipelines(
     projectName
   );
+  // FIX 2: Guard against projects with no pipelines to avoid an invalid
+  // getBuilds call with an empty definition list.
+  if (pipelines.length === 0) {
+    return [];
+  }
+
   const map = await getBuildsGroupedByPipeline(projectName, pipelines);
   const stats: PipelineOverview[] = [];
 
@@ -71,7 +87,8 @@ async function getPipelinesPerProject(
         succeeded,
         failed,
         canceled,
-        avgDuration: avgDuration / count,
+        // FIX 3: Guard against division by zero when a pipeline has no builds.
+        avgDuration: count > 0 ? avgDuration / count : 0,
       },
     });
   });
