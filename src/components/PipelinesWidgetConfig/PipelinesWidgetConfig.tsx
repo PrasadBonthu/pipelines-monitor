@@ -20,6 +20,11 @@ interface IPipelinesWidgetConfigState {
   showFailed: boolean;
   showCanceled: boolean;
   showAverage: boolean;
+  showAverageWaitTime: boolean;
+  showSuccessTrend: boolean;
+  showLastRunStatus: boolean;
+  showTriggeredBy: boolean;
+  showTopBranch: boolean;
   projects: string[];
   selectedProjects: string[];
   allProjects: string[];
@@ -52,7 +57,7 @@ class PipelinesWidgetConfig
       return <div></div>;
     }
 
-    const { showProjectName, showAsPercentage, showRuns, showSucceeded, showFailed, showCanceled, showAverage, allProjects, selectedProjects, renderMultipleProjects } = this.state;
+    const { showProjectName, showAsPercentage, showRuns, showSucceeded, showFailed, showCanceled, showAverage, showAverageWaitTime, showSuccessTrend, showLastRunStatus, showTriggeredBy, showTopBranch, allProjects, selectedProjects, renderMultipleProjects } = this.state;
 
     let projectItems: IListBoxItem<{}>[] = [];
 
@@ -170,6 +175,31 @@ class PipelinesWidgetConfig
           checked={showAverage}
           onChange={(value) => this.onChange("showAverage", value)}
           id="showAverage" />
+        <FormToggle
+          label="Show Average Wait Time Column"
+          checked={showAverageWaitTime}
+          onChange={(value) => this.onChange("showAverageWaitTime", value)}
+          id="showAverageWaitTime" />
+        <FormToggle
+          label="Show Success Rate Trend Column"
+          checked={showSuccessTrend}
+          onChange={(value) => this.onChange("showSuccessTrend", value)}
+          id="showSuccessTrend" />
+        <FormToggle
+          label="Show Last Run Status Column"
+          checked={showLastRunStatus}
+          onChange={(value) => this.onChange("showLastRunStatus", value)}
+          id="showLastRunStatus" />
+        <FormToggle
+          label="Show Triggered By Column"
+          checked={showTriggeredBy}
+          onChange={(value) => this.onChange("showTriggeredBy", value)}
+          id="showTriggeredBy" />
+        <FormToggle
+          label="Show Top Branch Column"
+          checked={showTopBranch}
+          onChange={(value) => this.onChange("showTopBranch", value)}
+          id="showTopBranch" />
       </div>
     );
   }
@@ -256,7 +286,12 @@ class PipelinesWidgetConfig
       showSucceeded: true,
       showFailed: true,
       showAverage: true,
+      showAverageWaitTime: true,
       showCanceled: true,
+      showSuccessTrend: false,
+      showLastRunStatus: false,
+      showTriggeredBy: false,
+      showTopBranch: false,
       renderMultipleProjects: false,
     };
 
