@@ -14,8 +14,10 @@
         "uri": "dist/PipelinesWidget/PipelinesWidget.html",
         "isNameConfigurable": true,
         "supportedSizes": [
+          { "rowSpan": 3, "columnSpan": 3 },
           { "rowSpan": 4, "columnSpan": 4 },
-          { "rowSpan": 3, "columnSpan": 3 }
+          { "rowSpan": 6, "columnSpan": 6 },
+          { "rowSpan": 8, "columnSpan": 12 }
         ],
         "supportedScopes": ["project_team"]
       }
